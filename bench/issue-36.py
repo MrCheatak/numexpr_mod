@@ -14,7 +14,7 @@ def bench(N):
     ntimes = (1000*2**15) // N
     for i in range(ntimes):
         ne.evaluate('a>1000')
-    print("numexpr--> %.3g" % ((time()-t0)/ntimes,))
+    print("numexpr_mod--> %.3g" % ((time()-t0)/ntimes,))
 
     t0 = time()
     for i in range(ntimes):

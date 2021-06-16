@@ -323,7 +323,7 @@ class test_numexpr(TestCase):
         # if in the top-frame. This cannot be done inside `unittest` as it is always 
         # executing code in a child frame.
         script = r';'.join([
-                r"import numexpr as ne",
+                r"import numexpr_mod as ne",
                 r"a=10",
                 r"ne.evaluate('1')",
                 r"a += 1",
@@ -383,7 +383,7 @@ class test_evaluate(TestCase):
     # Test for issue #37
     if sys.version_info[0] < 3:
         # In python 3 '/' perforns true division, not integer division.
-        # Integer division '//' is still not suppoerted by numexpr
+        # Integer division '//' is still not suppoerted by numexpr_mod
         def test_zero_div(self):
             x = arange(100, dtype='i4')
             y = evaluate("1/x")
@@ -651,13 +651,13 @@ def test_expressions():
                 same_exc_type = issubclass(type(ne_exception),
                                            type(np_exception))
                 if np_exception is None or not same_exc_type:
-                    print('numexpr error for expression %r' % (expr,))
+                    print('numexpr_mod error for expression %r' % (expr,))
                     raise
             except:
-                print('numexpr error for expression %r' % (expr,))
+                print('numexpr_mod error for expression %r' % (expr,))
                 raise
             else:
-                msg = ('expected numexpr error not raised for expression '
+                msg = ('expected numexpr_mod error not raised for expression '
                        '%r' % (expr,))
                 assert np_exception is None, msg
 
@@ -972,8 +972,8 @@ class test_threading_config(TestCase):
                 "import os",
                 "if 'NUMEXPR_MAX_THREADS' in os.environ: os.environ.pop('NUMEXPR_MAX_THREADS')",
                 "if 'OMP_NUM_THREADS' in os.environ: os.environ.pop('OMP_NUM_THREADS')",
-                "import numexpr",
-                "assert(numexpr.nthreads <= 8)",
+                "import numexpr_mod",
+                "assert(numexpr_mod.nthreads <= 8)",
                 "exit(0)"])
         subprocess.check_call([sys.executable, '-c', script])
 
@@ -983,8 +983,8 @@ class test_threading_config(TestCase):
         script = '\n'.join([
                 "import os",
                 "os.environ['NUMEXPR_MAX_THREADS'] = '4'",
-                "import numexpr",
-                "assert(numexpr.MAX_THREADS == 4)",
+                "import numexpr_mod",
+                "assert(numexpr_mod.MAX_THREADS == 4)",
                 "exit(0)"])
         subprocess.check_call([sys.executable, '-c', script])
 
@@ -1081,7 +1081,7 @@ class test_subprocess(TestCase):
 
 
 def print_versions():
-    """Print the versions of software that numexpr relies on."""
+    """Print the versions of software that numexpr_mod relies on."""
     # from pkg_resources import parse_version
     from numexpr.cpuinfo import cpu
     import platform

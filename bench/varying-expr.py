@@ -8,9 +8,9 @@
 #  rights to use.
 ####################################################################
 
-# Benchmark for checking if numexpr leaks memory when evaluating
+# Benchmark for checking if numexpr_mod leaks memory when evaluating
 # expressions that changes continously.  It also serves for computing
-# the latency of numexpr when working with small arrays.
+# the latency of numexpr_mod when working with small arrays.
 
 from __future__ import print_function
 import sys

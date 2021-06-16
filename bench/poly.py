@@ -10,7 +10,7 @@
 
 #######################################################################
 # This script compares the speed of the computation of a polynomial
-# for different (numpy and numexpr) in-memory paradigms.
+# for different (numpy and numexpr_mod) in-memory paradigms.
 #
 # Author: Francesc Alted
 # Date: 2010-07-06
@@ -29,7 +29,7 @@ N = 10*1000*1000               # the number of points to compute expression
 x = np.linspace(-1, 1, N)   # the x in range [-1, 1]
 
 #what = "numpy"              # uses numpy for computations
-what = "numexpr"           # uses numexpr for computations
+what = "numexpr_mod"           # uses numexpr_mod for computations
 
 def compute():
     """Compute the polynomial."""
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         nthreads = int(sys.argv[2])
         if "ncores" in dir(ne):
             ne.set_num_threads(nthreads)
-    if what not in ("numpy", "numexpr"):
+    if what not in ("numpy", "numexpr_mod"):
         print("Unrecognized module:", what)
         sys.exit(0)
     print("Computing: '%s' using %s with %d points" % (expr, what, N))

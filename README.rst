@@ -56,7 +56,7 @@ NumExpr_mod is available for install via `pip` for a wide range of platforms and
 Python versions (which may be browsed at: https://pypi.org/project/numexpr/#files) just like its original version. 
 Installation can be performed as::
 
-    pip install git+https://github.com/MrCheatak/numexpr_mod.git#numexpr_mod
+
 
 From Source
 ^^^^^^^^^^^

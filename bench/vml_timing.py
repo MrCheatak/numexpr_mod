@@ -57,23 +57,23 @@ def compare_times(expr, nexpr):
     numexpr_timer = timeit.Timer(evalexpr, setup_contiguous)
     numexpr_time = round(numexpr_timer.timeit(number=iterations), 4)
     numexpr_ttime.append(numexpr_time)
-    print('%30s %.4f'%("numexpr:", numexpr_time/iterations,), end=" ")
-    print("Speed-up of numexpr over numpy:", round(numpy_time/numexpr_time, 4))
+    print('%30s %.4f'%("numexpr_mod:", numexpr_time/iterations,), end=" ")
+    print("Speed-up of numexpr_mod over numpy:", round(numpy_time/numexpr_time, 4))
 
     evalexpr = 'evaluate("%s", optimization="aggressive")' % expr
     numexpr_timer = timeit.Timer(evalexpr, setup_strided)
     numexpr_stime = round(numexpr_timer.timeit(number=iterations), 4)
     numexpr_sttime.append(numexpr_stime)
-    print('%30s %.4f'%("numexpr strided:", numexpr_stime/iterations,), end=" ")
-    print("Speed-up of numexpr over numpy:", \
+    print('%30s %.4f'%("numexpr_mod strided:", numexpr_stime/iterations,), end=" ")
+    print("Speed-up of numexpr_mod over numpy:", \
           round(numpy_stime/numexpr_stime, 4))
 
     evalexpr = 'evaluate("%s", optimization="aggressive")' % expr
     numexpr_timer = timeit.Timer(evalexpr, setup_unaligned)
     numexpr_ntime = round(numexpr_timer.timeit(number=iterations), 4)
     numexpr_nttime.append(numexpr_ntime)
-    print('%30s %.4f'%("numexpr unaligned:", numexpr_ntime/iterations,), end=" ")
-    print("Speed-up of numexpr over numpy:", \
+    print('%30s %.4f'%("numexpr_mod unaligned:", numexpr_ntime/iterations,), end=" ")
+    print("Speed-up of numexpr_mod over numpy:", \
           round(numpy_ntime/numexpr_ntime, 4))
 
     print()
@@ -82,8 +82,8 @@ def compare_times(expr, nexpr):
 setupNP = """\
 from numpy import arange, linspace, arctan2, sqrt, sin, cos, exp, log
 from numpy import rec as records
-#from numexpr import evaluate
-from numexpr import %s
+#from numexpr_mod import evaluate
+from numexpr_mod import %s
 
 # Initialize a recarray of 16 MB in size
 r=records.array(None, formats='a%s,i4,f4,f8', shape=%s)
@@ -154,17 +154,17 @@ if __name__ == '__main__':
 #     print("numpy total:", sum(numpy_ttime)/iterations)
 #     print("numpy strided total:", sum(numpy_sttime)/iterations)
 #     print("numpy unaligned total:", sum(numpy_nttime)/iterations)
-#     print("numexpr total:", sum(numexpr_ttime)/iterations)
+#     print("numexpr_mod total:", sum(numexpr_ttime)/iterations)
     print("Contiguous case:\t %s (mean), %s (min), %s (max)" % \
           (round(tratios.mean(), 2),
            round(tratios.min(), 2),
            round(tratios.max(), 2)))
-#    print("numexpr strided total:", sum(numexpr_sttime)/iterations)
+#    print("numexpr_mod strided total:", sum(numexpr_sttime)/iterations)
     print("Strided case:\t\t %s (mean), %s (min), %s (max)" % \
           (round(stratios.mean(), 2),
            round(stratios.min(), 2),
            round(stratios.max(), 2)))
-#    print("numexpr unaligned total:", sum(numexpr_nttime)/iterations)
+#    print("numexpr_mod unaligned total:", sum(numexpr_nttime)/iterations)
     print("Unaligned case:\t\t %s (mean), %s (min), %s (max)" % \
           (round(ntratios.mean(), 2),
            round(ntratios.min(), 2),

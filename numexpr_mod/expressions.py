@@ -46,7 +46,7 @@ if sys.version_info[0] > 2:
     scalar_constant_types.append(str)
 scalar_constant_types = tuple(scalar_constant_types)
 
-from numexpr import interpreter
+from numexpr_mod import interpreter
 
 
 class Expression(object):
@@ -202,7 +202,7 @@ def func(func, minkind=None, maxkind=None):
             # Exception for following NumPy casting rules
             #FIXME: this is not always desirable. The following
             # functions which return ints (for int inputs) on numpy
-            # but not on numexpr: copy, abs, fmod, ones_like
+            # but not on numexpr_mod: copy, abs, fmod, ones_like
             kind = 'double'
         else:
             # Apply regular casting rules

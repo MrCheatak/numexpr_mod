@@ -21,9 +21,9 @@ for more info about it.
 
 """
 
-from __config__ import show as show_config, get_info
+from .__config__ import show as show_config, get_info
 
-from numexpr.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
+from numexpr_mod.interpreter import MAX_THREADS, use_vml, __BLOCK_SIZE1__
 
 is_cpu_amd_intel = False # DEPRECATION WARNING: WILL BE REMOVED IN FUTURE RELEASE
 
@@ -32,13 +32,13 @@ is_cpu_amd_intel = False # DEPRECATION WARNING: WILL BE REMOVED IN FUTURE RELEAS
 
 import os, os.path
 import platform
-from numexpr.expressions import E
-from numexpr.necompiler import NumExpr, disassemble, evaluate, re_evaluate
+from numexpr_mod.expressions import E
+from numexpr_mod.necompiler import NumExpr, disassemble, evaluate, re_evaluate, evaluate_from_cache, cache_expression
 
-from numexpr.utils import (_init_num_threads,
-    get_vml_version, set_vml_accuracy_mode, set_vml_num_threads,
-    set_num_threads, get_num_threads,
-    detect_number_of_cores, detect_number_of_threads)
+from numexpr_mod.utils import (_init_num_threads,
+                           get_vml_version, set_vml_accuracy_mode, set_vml_num_threads,
+                           set_num_threads, get_num_threads,
+                           detect_number_of_cores, detect_number_of_threads)
 
 # Detect the number of cores
 ncores = detect_number_of_cores()
@@ -47,23 +47,23 @@ nthreads = _init_num_threads()
 # The default for VML is 1 thread (see #39)
 # set_vml_num_threads(1)
 
-import version
+from . import version
 __version__ = version.version
 
 def print_versions():
-    """Print the versions of software that numexpr relies on."""
+    """Print the versions of software that numexpr_mod relies on."""
     try:
-        import numexpr.tests
-        return numexpr.tests.print_versions()
+        import numexpr_mod.tests
+        return numexpr_mod.tests.print_versions()
     except ImportError:
         # To maintain Python 2.6 compatibility we have simple error handling
-        raise ImportError('`numexpr.tests` could not be imported, likely it was excluded from the distribution.')
+        raise ImportError('`numexpr_mod.tests` could not be imported, likely it was excluded from the distribution.')
 
 def test(verbosity=1):
     """Run all the tests in the test suite."""
     try:
-        import numexpr.tests
-        return numexpr.tests.test(verbosity=verbosity)
+        import numexpr_mod.tests
+        return numexpr_mod.tests.test(verbosity=verbosity)
     except ImportError:
         # To maintain Python 2.6 compatibility we have simple error handling
-        raise ImportError('`numexpr.tests` could not be imported, likely it was excluded from the distribution.')
+        raise ImportError('`numexpr_mod.tests` could not be imported, likely it was excluded from the distribution.')

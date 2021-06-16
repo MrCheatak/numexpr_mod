@@ -42,17 +42,17 @@ def compare_times(setup, expr):
 
     numexpr_timer = timeit.Timer('evaluate("%s", optimization="aggressive")' % expr, setup)
     numexpr_time = numexpr_timer.timeit(number=iterations)
-    print("numexpr:", numexpr_time/iterations)
+    print("numexpr_mod:", numexpr_time/iterations)
 
     tratio = numpy_time/numexpr_time
-    print("Speed-up of numexpr over numpy:", round(tratio, 2))
+    print("Speed-up of numexpr_mod over numpy:", round(tratio, 2))
     return tratio
 
 setup1 = """\
 from numpy import arange
 try: from scipy.weave import blitz
 except: pass
-from numexpr import evaluate
+from numexpr_mod import evaluate
 result = arange(%f, dtype='%s')
 b = arange(%f, dtype='%s')
 c = arange(%f, dtype='%s')
@@ -65,7 +65,7 @@ setup2 = """\
 from numpy import arange
 try: from scipy.weave import blitz
 except: pass
-from numexpr import evaluate
+from numexpr_mod import evaluate
 a = arange(%f, dtype='%s')
 b = arange(%f, dtype='%s')
 result = arange(%f, dtype='%s')
@@ -77,7 +77,7 @@ setup3 = """\
 from numpy import arange, sin, cos, sinh
 try: from scipy.weave import blitz
 except: pass
-from numexpr import evaluate
+from numexpr_mod import evaluate
 a = arange(2*%f, dtype='%s')[::2]
 b = arange(%f, dtype='%s')
 result = arange(%f, dtype='%s')
@@ -89,7 +89,7 @@ setup4 = """\
 from numpy import arange, sin, cos, sinh, arctan2
 try: from scipy.weave import blitz
 except: pass
-from numexpr import evaluate
+from numexpr_mod import evaluate
 a = arange(2*%f, dtype='%s')[::2]
 b = arange(%f, dtype='%s')
 result = arange(%f, dtype='%s')
@@ -101,7 +101,7 @@ setup5 = """\
 from numpy import arange, sin, cos, sinh, arctan2, sqrt, where
 try: from scipy.weave import blitz
 except: pass
-from numexpr import evaluate
+from numexpr_mod import evaluate
 a = arange(2*%f, dtype='%s')[::2]
 b = arange(%f, dtype='%s')
 result = arange(%f, dtype='%s')

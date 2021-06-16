@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# numexpr documentation build configuration file, created by
+# numexpr_mod documentation build configuration file, created by
 # sphinx-quickstart on Sat Feb  4 17:19:36 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -18,8 +18,8 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os, sys
-import numexpr
-module_location = os.path.dirname( numexpr.__file__ )
+import numexpr_mod
+module_location = os.path.dirname(numexpr_mod.__file__)
 sys.path.insert(0, os.path.abspath(module_location) )
 
 # -- General configuration ------------------------------------------------
@@ -61,7 +61,7 @@ source_encoding = 'utf-8-sig'
 master_doc = 'index'
 
 # General information about the project.
-project = 'numexpr'
+project = 'numexpr_mod'
 copyright = '2006 (various)-2017, David M. Cooke, Francesc Alted, and others'
 author = 'David M. Cooke, Francesc Alted, and others'
 
@@ -147,7 +147,7 @@ html_theme = 'default'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = 'numexpr va0'
+# html_title = 'numexpr_mod va0'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -273,7 +273,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 #latex_documents = [
-#    (master_doc, 'numexpr.tex', 'numexpr Documentation',
+#    (master_doc, 'numexpr_mod.tex', 'numexpr_mod Documentation',
 #     'David M. Cooke, Francesc Alted, and others', 'manual'),
 #]
 
@@ -315,7 +315,7 @@ latex_elements = {
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 #man_pages = [
-#    (master_doc, 'numexpr', 'numexpr Documentation',
+#    (master_doc, 'numexpr_mod', 'numexpr_mod Documentation',
 #     [author], 1)
 #]
 
@@ -330,8 +330,8 @@ latex_elements = {
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 #texinfo_documents = [
-#    (master_doc, 'numexpr', 'numexpr Documentation',
-#     author, 'numexpr', 'One line description of project.',
+#    (master_doc, 'numexpr_mod', 'numexpr_mod Documentation',
+#     author, 'numexpr_mod', 'One line description of project.',
 #     'Miscellaneous'),
 #]
 

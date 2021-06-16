@@ -14,14 +14,14 @@ import numpy
 import threading
 
 is_cpu_amd_intel = False # DEPRECATION WARNING: WILL BE REMOVED IN FUTURE RELEASE
-from numexpr import interpreter, expressions, use_vml
-from numexpr.utils import CacheDict
+from numexpr_mod import interpreter, expressions, use_vml
+from numexpr_mod.utils import CacheDict
 
 # Declare a double type that does not exist in Python space
 double = numpy.double
 if sys.version_info[0] < 3:
     int_ = int
-    long_ = long
+    long_ = int
 else:
     int_ = numpy.int32
     long_ = numpy.int64
@@ -36,7 +36,7 @@ type_to_kind = expressions.type_to_kind
 kind_to_type = expressions.kind_to_type
 default_type = kind_to_type[expressions.default_kind]
 
-# VML functions that are implemented in numexpr
+# VML functions that are implemented in numexpr_mod
 vml_functions = [
     "div",  # interp_body.cpp
     "inv",  # interp_body.cpp
@@ -74,7 +74,7 @@ if sys.version_info[0] > 2:
     kind_to_typecode['str'] = 's'
     type_to_typecode[str] = 's'
 
-scalar_constant_kinds = kind_to_typecode.keys()
+scalar_constant_kinds = list(kind_to_typecode.keys())
 
 
 class ASTNode(object):
@@ -346,7 +346,7 @@ def getConstants(ast):
     '''
     RAM: implemented magic method __lt__ for ASTNode to fix issues
     #88 and #209. The following test code works now, as does the test suite.
-    import numexpr as ne
+    import numexpr_mod as ne
     a = 1 + 3j; b = 5.0
     ne.evaluate( 'a*2 + 15j - b' )
     '''
@@ -557,7 +557,7 @@ def precompile(ex, signature=(), context={}):
     types = dict(signature)
     input_order = [name for (name, type_) in signature]
 
-    if isinstance(ex, (str, unicode)):
+    if isinstance(ex, str):
         ex = stringToExpression(ex, types, context)
 
     # the AST is like the expression, but the node objects don't have
@@ -809,7 +809,7 @@ def evaluate(ex, local_dict=None, global_dict=None,
           * 'unsafe' means any data conversions may be done.
     """
     global _numexpr_last
-    if not isinstance(ex, (str, unicode)):
+    if not isinstance(ex, str):
         raise ValueError("must specify expression as a string")
     # Get the names for this expression
     context = getContext(kwargs, frame_depth=1)
@@ -823,7 +823,7 @@ def evaluate(ex, local_dict=None, global_dict=None,
     signature = [(name, getType(arg)) for (name, arg) in
                  zip(names, arguments)]
 
-    # Look up numexpr if possible.
+    # Look up numexpr_mod if possible.
     numexpr_key = expr_key + (tuple(signature),)
     try:
         compiled_ex = _numexpr_cache[numexpr_key]
@@ -859,3 +859,79 @@ def re_evaluate(local_dict=None):
     kwargs = _numexpr_last['kwargs']
     with evaluate_lock:
         return compiled_ex(*args, **kwargs)
+
+def evaluate_from_cache(cached_expr, out=None, casting='safe', order='K', local_dict=None):
+    """Re-evaluate the previous executed array expression without any check.
+
+    This is meant for accelerating functions that are re-evaluating the same
+    expression repeatedly without changing anything else than the operands.
+    If unsure, use evaluate() which is safer.
+
+    Parameters
+    ----------
+    cached_expr : NumExpr instance
+
+    out : NumPy array, optional
+        An existing array where the outcome is going to be stored.  Care is
+        required so that this array has the same shape and type than the
+        actual outcome of the computation.  Useful for avoiding unnecessary
+        new array allocations.
+
+    casting : {'no', 'equiv', 'safe', 'same_kind', 'unsafe'}, optional
+        Controls what kind of data casting may occur when making a copy or
+        buffering.  Setting this to 'unsafe' is not recommended, as it can
+        adversely affect accumulations.
+
+      * 'no' means the data types should not be cast at all.
+      * 'equiv' means only byte-order changes are allowed.
+      * 'safe' means only casts which can preserve values are allowed.
+      * 'same_kind' means only safe casts or casts within a kind,
+        like float64 to float32, are allowed.
+      * 'unsafe' means any data conversions may be done.
+
+    order : {'C', 'F', 'A', or 'K'}, optional
+        Controls the iteration order for operands. 'C' means C order, 'F'
+        means Fortran order, 'A' means 'F' order if all the arrays are
+        Fortran contiguous, 'C' order otherwise, and 'K' means as close to
+        the order the array elements appear in memory as possible.  For
+        efficient computations, typically 'K'eep order (the default) is
+        desired.
+
+    local_dict : dictionary, optional
+        A dictionary that replaces the local operands in current frame.
+
+    """
+    try:
+        compiled_ex = cached_expr['ex']
+    except KeyError:
+        raise RuntimeError("not a valid evaluate() expression")
+    argnames = cached_expr['argnames']
+    args = getArguments(argnames, local_dict)
+    kwargs = {'out': out, 'order': order, 'casting': casting,
+              'ex_uses_vml': False}
+    with evaluate_lock:
+        return compiled_ex(*args, **kwargs)
+
+def cache_expression(ex, signature=(), local_dict=None, global_dict=None, **kwargs):
+    """ Precompiles expressions for continious use
+
+    ex is a string forming an expression, like "2*a+3*b". The values for "a"
+    and "b" will by default be taken from the calling function's frame
+    (through use of sys._getframe()). Alternatively, they can be specifed
+    using the 'local_dict' or 'global_dict' arguments.
+
+    signature : list
+        Defines types of the variables used in the expression
+    local_dict : dictionary, optional
+        A dictionary that replaces the local operands in current frame.
+
+    global_dict : dictionary, optional
+        A dictionary that replaces the global operands in current frame.
+    :return:
+    """
+    context = getContext({}, frame_depth=1)
+    names,ex_uses_vml  = getExprNames(ex, context)
+    kwargs = {'out': None, 'order': None, 'casting': None,
+              'ex_uses_vml': None}
+    compiled_ex = NumExpr(ex, signature, **context)
+    return dict(ex=compiled_ex, argnames=names, local_dict=local_dict, kwargs=kwargs)
