@@ -1,7 +1,7 @@
 ======================================================
-NumExpr: Fast numerical expression evaluator for NumPy
+NumExpr: Fast numerical expression evaluator for NumPy (modified version)
 ======================================================
-
+*Original package info:*
 :Author: David M. Cooke, Francesc Alted, and others.
 :Maintainer: Robert A. McLeod
 :Contact: robbmcleod@gmail.com
@@ -138,6 +138,36 @@ Usage
 ::
 
   >>> import numpy as np
+      >>> import numexpr as ne
+
+      >>> a = np.arange(1e6)   # Choose large arrays for better speedups
+      >>> b = np.arange(1e6)
+
+      >>> ne.evaluate("a + 1")   # a simple expression
+      array([  1.00000000e+00,   2.00000000e+00,   3.00000000e+00, ...,
+               9.99998000e+05,   9.99999000e+05,   1.00000000e+06])
+
+      >>> ne.evaluate('a
+    >>> import numexpr as ne
+
+    >>> a = np.arange(1e6)   # Choose large arrays for better speedups
+    >>> b = np.arange(1e6)
+
+    >>> ne.evaluate("a + 1")   # a simple expression
+    array([  1.00000000e+00,   2.00000000e+00,   3.00000000e+00, ...,
+             9.99998000e+05,   9.99999000e+05,   1.00000000e+06])
+
+    >>> ne.evaluate('a
+    >>> import numexpr_mod as ne
+
+    >>> a = np.arange(1e6)   # Choose large arrays for better speedups
+    >>> b = np.arange(1e6)
+
+    >>> ne.evaluate("a + 1")   # a simple expression
+    array([  1.00000000e+00,   2.00000000e+00,   3.00000000e+00, ...,
+             9.99998000e+05,   9.99999000e+05,   1.00000000e+06])
+
+    >>> ne.evaluate('a
   >>> import numexpr as ne
 
   >>> a = np.arange(1e6)   # Choose large arrays for better speedups
@@ -157,6 +187,14 @@ Usage
   >>> s = np.array([b'abba', b'abbb', b'abbcdef'])
   >>> ne.evaluate("b'abba' == s")   # string arrays are supported too
   array([ True, False, False], dtype=bool)
+
+In the modified version it is possible to precompile expressions for
+continuous use:
+  >>> a = np.arange(0, 10, 1)
+  >>> b = np.arange(0, 5, 0.5)
+  >>> expr = ne.cache_expression("a + b", [('a', np._float), ('b', np._float)]
+  >>> ne.evaluate_from_cache(expr)
+  array([ 0. ,  1.5,  3. ,  4.5,  6. ,  7.5,  9. , 10.5, 12. , 13.5])
 
 
 Documentation
