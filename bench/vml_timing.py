@@ -12,7 +12,7 @@ from __future__ import print_function
 import sys
 import timeit
 import numpy
-import numexpr
+import numexpr_mod
 
 array_size = 1000*1000
 iterations = 10
@@ -129,8 +129,8 @@ def compare(expression=False):
     print()
 
 if __name__ == '__main__':
-    import numexpr
-    print("Numexpr version: ", numexpr.__version__)
+    import numexpr_mod
+    print("Numexpr version: ", numexpr_mod.__version__)
 
     numpy.seterr(all='ignore')
 
