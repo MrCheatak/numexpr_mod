@@ -53,9 +53,10 @@ From wheels
 ^^^^^^^^^^^
 
 NumExpr_mod is available for install via `pip` for a wide range of platforms and 
-Python versions (which may be browsed at: https://pypi.org/project/numexpr/#files) just like its original version. 
+Python versions just like its original version. 
 Installation can be performed as::
 
+pip install git+https://github.com/MrCheatak/numexpr_mod.git#numexpr_mod
 
 
 From Source
@@ -89,31 +90,11 @@ In the modified version it is possible to precompile expressions for
 continuous use:
   >>> a = np.arange(0, 10, 1)
   >>> b = np.arange(0, 5, 0.5)
-  >>> expr = ne.cache_expression("a + b", [('a', np._float), ('b', np._float)]
+  >>> expr = ne.cache_expression("a + b")
   >>> ne.evaluate_cached(expr)
   array([ 0. ,  1.5,  3. ,  4.5,  6. ,  7.5,  9. , 10.5, 12. , 13.5])
 
-The variables signature must be in a specific order, so in case several variables with different types are used in one expression, it could be necessary to peak under the hood into the numexpr_mod/necompiler.py.
-In the debugging mode one should check what signature dictionary is generated in the
-continuous use:
-  >>> a = np.arange(0, 10, 1)
-  >>> b = np.arange(0, 5, 0.5)
-  >>> expr = ne.cache_expression("a + b", [('a', np._float), ('b', np._float)]
-  >>> ne.evaluate_cached(expr)
-  array([ 0. ,  1.5,  3. ,  4.5,  6. ,  7.5,  9. , 10.5, 12. , 13.5])
-
-The variables signature must be in a specific order, so in case several variables with different types are used in one expression, it could be necessary to peak under the hood into the numexpr_mod/necompiler.py.
-In the debugging mode one should check what signature dictionary is generated in the
-continuous use:
-  >>> a = np.arange(0, 10, 1)
-  >>> b = np.arange(0, 5, 0.5)
-  >>> expr = ne.cache_expression("a + b", [('a', np._float), ('b', np._float)]
-  >>> ne.evaluate_from_cache(expr)
-  array([ 0. ,  1.5,  3. ,  4.5,  6. ,  7.5,  9. , 10.5, 12. , 13.5])
-
-The variables signature must be in a specific order, so in case several variables with different types are used in one expression, it could be necessary to peak under the hood into the numexpr_mod/necompiler.py.
-In the debugging mode one should check what signature dictionary is generated in the `evaluate` function and use the same sequence when caching that expression.
-
+It is required that variables remain the same type when cached expression is used.
 
 Documentation
 -------------
