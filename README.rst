@@ -90,6 +90,24 @@ continuous use:
   >>> a = np.arange(0, 10, 1)
   >>> b = np.arange(0, 5, 0.5)
   >>> expr = ne.cache_expression("a + b", [('a', np._float), ('b', np._float)]
+  >>> ne.evaluate_cached(expr)
+  array([ 0. ,  1.5,  3. ,  4.5,  6. ,  7.5,  9. , 10.5, 12. , 13.5])
+
+The variables signature must be in a specific order, so in case several variables with different types are used in one expression, it could be necessary to peak under the hood into the numexpr_mod/necompiler.py.
+In the debugging mode one should check what signature dictionary is generated in the
+continuous use:
+  >>> a = np.arange(0, 10, 1)
+  >>> b = np.arange(0, 5, 0.5)
+  >>> expr = ne.cache_expression("a + b", [('a', np._float), ('b', np._float)]
+  >>> ne.evaluate_cached(expr)
+  array([ 0. ,  1.5,  3. ,  4.5,  6. ,  7.5,  9. , 10.5, 12. , 13.5])
+
+The variables signature must be in a specific order, so in case several variables with different types are used in one expression, it could be necessary to peak under the hood into the numexpr_mod/necompiler.py.
+In the debugging mode one should check what signature dictionary is generated in the
+continuous use:
+  >>> a = np.arange(0, 10, 1)
+  >>> b = np.arange(0, 5, 0.5)
+  >>> expr = ne.cache_expression("a + b", [('a', np._float), ('b', np._float)]
   >>> ne.evaluate_from_cache(expr)
   array([ 0. ,  1.5,  3. ,  4.5,  6. ,  7.5,  9. , 10.5, 12. , 13.5])
 

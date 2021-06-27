@@ -860,7 +860,7 @@ def re_evaluate(local_dict=None):
     with evaluate_lock:
         return compiled_ex(*args, **kwargs)
 
-def evaluate_from_cache(cached_expr, out=None, casting='safe', order='K', local_dict=None):
+def evaluate_cached(cached_expr, out=None, casting='safe', order='K', local_dict=None):
     """Re-evaluate the previous executed array expression without any check.
 
     This is meant for accelerating functions that are re-evaluating the same
@@ -912,7 +912,7 @@ def evaluate_from_cache(cached_expr, out=None, casting='safe', order='K', local_
     with evaluate_lock:
         return compiled_ex(*args, **kwargs)
 
-def cache_expression(ex, signature=(), local_dict=None, global_dict=None, **kwargs):
+def cache_expression(ex, local_dict=None, global_dict=None, signature=(), **kwargs):
     """ Precompiles expressions for continious use
 
     ex is a string forming an expression, like "2*a+3*b". The values for "a"
@@ -920,18 +920,28 @@ def cache_expression(ex, signature=(), local_dict=None, global_dict=None, **kwar
     (through use of sys._getframe()). Alternatively, they can be specifed
     using the 'local_dict' or 'global_dict' arguments.
 
-    signature : list
-        Defines types of the variables used in the expression
+
     local_dict : dictionary, optional
         A dictionary that replaces the local operands in current frame.
 
     global_dict : dictionary, optional
         A dictionary that replaces the global operands in current frame.
+
+    signature : list
+        (Optional) Defines types of the variables used in the expression
+
     :return:
     """
     context = getContext({}, frame_depth=1)
     names,ex_uses_vml  = getExprNames(ex, context)
     kwargs = {'out': None, 'order': None, 'casting': None,
               'ex_uses_vml': None}
+    if not signature:
+        arguments = getArguments(names, local_dict, global_dict)
+
+        # Create a signature
+        signature = [(name, getType(arg)) for (name, arg) in
+                     zip(names, arguments)]
+
     compiled_ex = NumExpr(ex, signature, **context)
     return dict(ex=compiled_ex, argnames=names, local_dict=local_dict, kwargs=kwargs)

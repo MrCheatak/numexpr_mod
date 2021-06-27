@@ -30,7 +30,7 @@ from numpy.testing import (assert_equal, assert_array_equal,
 from numpy import shape, allclose, array_equal, ravel, isnan, isinf
 
 import numexpr
-from numexpr import E, NumExpr, evaluate, re_evaluate, disassemble, use_vml
+from numexpr import E, NumExpr, cache_expression, evaluate, re_evaluate, evaluate_from_cache, disassemble, use_vml
 
 import unittest
 
@@ -353,6 +353,20 @@ class test_evaluate(TestCase):
         c = array([7., 8., 9.])
         x = evaluate("2*a + 3*b*c")
         assert_array_equal(x, array([86., 124., 168.]))
+
+    def test_evaluate_from_cache(self):
+        F, n, s, t, dt =3000, 0.87, 0.002, 500, 0.000001
+        flux = np.zeros((100, 100), dtype=np.int64)
+        flux[30:70, 30:70] = 500000
+        flux[40:60, 40:60] = 2000000
+        flux[48:52, 48:52] = 10000000
+        expression = cache_expression("F*n*dt + 1/t + (s*flux)*dt")
+        result = evaluate_from_cache(expression)
+        reference = F*n*dt + 1/t + (s*flux)*dt
+        if np.array_equal(result, reference):
+            print("Test passed")
+        else:
+            print("Test not passed!")
 
     def test_simple_expr_small_array(self):
         x = arange(100.0)
@@ -1179,6 +1193,8 @@ def suite():
 
 if __name__ == '__main__':
     print_versions()
-    unittest.main(defaultTest='suite')
+    testing = test_evaluate()
+    testing.test_evaluate_from_cache()
+    # unittest.main(defaultTest='suite')
 #    suite = suite()
 #    unittest.TextTestRunner(verbosity=2).run(suite)
