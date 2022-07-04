@@ -37,7 +37,7 @@ type_to_kind = {bool: 'bool', int_: 'int', long_: 'long', float: 'float',
 kind_to_type = {'bool': bool, 'int': int_, 'long': long_, 'float': float,
                 'double': double, 'complex': complex, 'bytes': bytes}
 kind_rank = ('bool', 'int', 'long', 'float', 'double', 'complex', 'none')
-scalar_constant_types = [bool, int_, long, float, double, complex, bytes]
+scalar_constant_types = [bool, int_, int, float, double, complex, bytes]
 
 # Final corrections for Python 3 (mainly for PyTables needs)
 if sys.version_info[0] > 2:
